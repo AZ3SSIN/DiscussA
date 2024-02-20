@@ -1,12 +1,77 @@
-/* Reset default styles */
-body, h1, h2, p, ul {
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #f0f0f0;
     margin: 0;
     padding: 0;
 }
 
-/* Basic styling */
-body {
-    font-family: Arial, sans-serif;
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+#create-poll,
+#find-pool {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+#create-poll h3,
+#find-pool h3 {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #555;
+}
+
+#admin {
+    background-color: #099b30;
+    color: white;
+    padding: 8px 12px; /* Adjust padding to make button smaller */
+    margin: 8px 20px 8px auto; /* Add auto margin to the left to push it to the right */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.9;
 }
 
 header {
@@ -14,52 +79,189 @@ header {
     color: #fff;
     padding: 20px;
     text-align: center;
+    position: relative; /* Add position relative to the header */
 }
 
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+#admin {
+    position: absolute; /* Add position absolute to the admin button */
+    top: 50%; /* Position it vertically centered */
+    transform: translateY(-50%); /* Shift it upward by half of its height to vertically center */
+    right: 20px; /* Position it on the right side */
 }
 
-nav ul li {
-    display: inline;
-    margin-right: 20px;
+#admin:hover {
+    opacity:1;
 }
 
-nav ul li a {
-    color: #333;
-    text-decoration: none;
+#admin:active {
+    background-color: #a7e09a; /* Darken the background color when clicked */
 }
 
-main {
+#adminLoginDiv {
+    background-color: #fff;
     padding: 20px;
-}
-
-section {
     margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-footer {
+#adminLoginDiv h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#adminLoginDiv label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#adminLoginDiv input[type="text"],
+#adminLoginDiv input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#adminLoginDiv button[type="submit"] {
     background-color: #333;
     color: #fff;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.question {
-    margin-bottom: 20px; /* Adds spacing between questions */
-    border: 1px solid #ccc; /* Adds a border around each question */
-    padding: 10px; /* Adds padding inside each question */
-    border-radius: 5px; /* Rounds the corners of each question */
-    background-color: #f9f9f9; /* Sets a background color for each question */
+#adminLoginDiv button[type="submit"]:hover {
+    background-color: #555;
 }
-#admin {
+
+#logout {
     position: absolute;
-    right: 20px; /* Adjust this value as needed */
-    top: 20px; /* Adjust this value as needed */
+    top: 20px; /* Adjust the top position as needed */
+    right: 20px; /* Adjust the right position as needed */
+    background-color: #099b30;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Optional: Add hover effect */
+#logout:hover {
+    background-color: #555;
+}
+
+#logout:active {
+    background-color: #a7e09a; /* Darken the background color when clicked */
+}
+
+/* Style the enter key display */
+#enterKeyDisplay {
+    font-weight: bold;
+}
+
+/* Style the share pool button */
+/* Style the share pool button */
+#copyButton {
+    position: absolute; /* Change to fixed positioning */
+    top: 85px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    z-index: 999; /* Ensure the button appears above other content */
+}
+
+
+/* Style the question container */
+.question {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    position: relative; /* Make the container relative for absolute positioning */
+}
+
+/* Styling for answer container */
+.answer-container {
+    margin-top: 8px;
+}
+
+/* Styling for answer text */
+.answer {
+    margin-bottom: 4px;
+}
+
+.answer-text{
+    margin-top: 8px;
+}
+/* Styling for time posted container */
+.time-posted-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 2px;
+}
+
+/* Styling for time posted */
+.time-posted {
+    color: #777;
+    font-size: 12px;
+}
+
+
+
+/* Style the delete button */
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Add a hover effect to the delete button */
+.delete-btn:hover {
+    background-color: #c82333; /* Darker red */
+    border-color: #c82333;
+}
+
+.answer-form button[type="submit"] {
+    background-color: #0bea51; /* Blue background color */
+    color: #fff; /* White text color */
+    border: none; /* No border */
+    padding: 5px 10px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Cursor style */
+}
+
+.answer-form button[type="submit"]:hover {
+    background-color: #a5e4b2; /* Darker blue background color on hover */
+}
+
+
+.answer {
+    margin-top: 10px; /* Add some space between each answer */
+    padding: 10px; /* Add padding around each answer */
+    border: 1px solid #ccc; /* Add a border to separate each answer */
+    border-radius: 5px; /* Add rounded corners */
+    background-color: #f9f9f9; /* Light gray background color */
+}
+
+.answer p {
+    margin: 0; /* Remove default margin for paragraphs */
+}
+
+.askQuestionButton {
+    position: absolute;
+    margin-left: 10px;
+
 }
