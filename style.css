@@ -1,0 +1,65 @@
+/* Reset default styles */
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+/* Basic styling */
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #333;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.question {
+    margin-bottom: 20px; /* Adds spacing between questions */
+    border: 1px solid #ccc; /* Adds a border around each question */
+    padding: 10px; /* Adds padding inside each question */
+    border-radius: 5px; /* Rounds the corners of each question */
+    background-color: #f9f9f9; /* Sets a background color for each question */
+}
+#admin {
+    position: absolute;
+    right: 20px; /* Adjust this value as needed */
+    top: 20px; /* Adjust this value as needed */
+}
