@@ -16,34 +16,42 @@ const db = firebase.firestore();  // Use firestore() instead of database()
 const pollId = localStorage.getItem("poolId");
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("adminLogin").addEventListener("submit", function (event) {
-        event.preventDefault();
-        const title = document.getElementById("poll-titleL").value;
-        const password = document.getElementById("poll-passwordL").value;
-        const poolRef = db.collection("questionPool");
-
-        poolRef.where("pollTitle", "==", title)  // Use enterKey variable instead of string "enterKey"
-            .where("password", "==", password)
-            .get()
-            .then((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    querySnapshot.forEach((doc) => {
-                        localStorage.setItem("poolId", doc.id);
-                        window.location.href = "adminManagement.html";
-                    });
-                } else {
-                    console.log("No pool found.");
-                }
-            })
-            .catch((error) => {
-                console.error("Error getting pools:", error);
-            });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
     displayQuestionsByPollId(pollId);
+    displayPollKey();
 });
+
+function displayPollKey() {
+    const questionRef = db.collection("questionPool");
+
+    return questionRef.doc(pollId) // Assuming pollId is the ID of the document you want to retrieve
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                // Document found, return its data
+                return doc.data();
+            } else {
+                // Document does not exist
+                console.error("Document not found");
+                return null;
+            }
+        })
+        .catch((error) => {
+            console.error("Error getting document:", error);
+            return null; // Return null in case of error
+        });
+}
+
+// Example usage:
+displayPollKey().then((pollData) => {
+    if (pollData) {
+        // Update HTML content with the data from the document
+        document.getElementById("enterKeyDisplay").innerText = pollData.enterKey;
+    } else {
+        // Handle case where document is not found or error occurred
+        console.error("Enter key not found or error occurred.");
+    }
+});
+
 
 // Function to retrieve and display questions based on pollId
 function displayQuestionsByPollId(pollId) {
@@ -55,15 +63,18 @@ function displayQuestionsByPollId(pollId) {
         .get()
         .then((querySnapshot) => {
             const container = document.getElementById("question-container");
-
-
+            if (querySnapshot.empty) {
+                const container = document.getElementById("question-container");
+                const message = document.createElement("h2");
+                message.textContent = "No Question Yet";
+                container.appendChild(message);
+            }
             // Iterate through the retrieved documents
             querySnapshot.forEach((doc) => {
                 // Access the data in each document
                 const questionData = doc.data();
                 const questionText = questionData.question;
                 const questionId = doc.id;
-                const questionTime = questionData.time;
                 const timestampData = questionData.time;
 
                 // Convert Firestore timestamp to JavaScript Date object
@@ -80,9 +91,21 @@ function displayQuestionsByPollId(pollId) {
                 const questionDiv = document.createElement("div");
                 questionDiv.classList.add("question");
                 questionDiv.innerHTML = `
-                           <p>Question: ${questionText}</p>
-                           <p>Time Posted: ${formattedDateTime}</p>
+                           <p>${questionText}</p>
                        `;
+
+                // Create "Time Posted" paragraph
+                // Time posted section creation
+                const timePostedPara = document.createElement("p");
+                timePostedPara.textContent = `Time Posted: ${formattedDateTime}`;
+                timePostedPara.classList.add("time-posted"); // Add the class for styling
+
+                const timePostedContainer = document.createElement("div");
+                timePostedContainer.classList.add("time-posted-container");
+                timePostedContainer.appendChild(timePostedPara);
+
+                questionDiv.appendChild(timePostedContainer);
+
 
                 // Create answer form
                 const answerForm = document.createElement("form");
@@ -117,6 +140,7 @@ function displayQuestionsByPollId(pollId) {
             console.error("Error getting questions: ", error);
         });
 }
+
 
 function deleteQuestion(questionId) {
     // Get a reference to the question document to be deleted
@@ -175,16 +199,22 @@ function displayAnswersForQuestion(questionId, questionDiv) {
 
                 // Create HTML element for the answer
                 const answerPara = document.createElement("p");
-                answerPara.textContent = `Answer: ${answerText}`;
+                answerPara.textContent = `${answerText}`;
+                answerPara.classList.add("answer"); // Add the "answer" class
 
                 // Append the answer to the question div
-                questionDiv.appendChild(answerPara);
+                const answerContainer = document.createElement("div");
+                answerContainer.classList.add("answer-container");
+                answerContainer.appendChild(answerPara);
+
+                questionDiv.appendChild(answerContainer);
             });
         })
         .catch((error) => {
             console.error("Error getting answers for question ", questionId, ": ", error);
         });
 }
+
 
 function saveAnswer(questionId, answerText) {
     // Get a reference to the "questions" collection
@@ -206,8 +236,8 @@ function saveAnswer(questionId, answerText) {
         });
 }
 
-document.addEventListener("DOMContentLoaded", function (){
-    document.getElementById('copyButton').addEventListener('click', function() {
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('copyButton').addEventListener('click', function () {
         const shareableUrl = generateShareableUrl(pollId);
         copyToClipboard(shareableUrl);
         alert('URL copied to clipboard!');
