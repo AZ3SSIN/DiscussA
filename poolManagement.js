@@ -41,44 +41,71 @@ function displayQuestionsByPollId(pollId) {
 
     // Query the "questions" collection for documents where the "pollId" field matches the specified pollId
     questionsRef.where("poolId", "==", pollId)
-               .get()
-               .then((querySnapshot) => {
-                const container = document.getElementById("question-container");
-                container.innerHTML = "";
+        .get()
+        .then((querySnapshot) => {
+            const container = document.getElementById("question-container");
 
-                   // Iterate through the retrieved documents
-                   querySnapshot.forEach((doc) => {
-                       // Access the data in each document
-                       const questionData = doc.data();
-                       const questionText = questionData.question;
-                       const questionId = doc.id;
-                       const questionTime = questionData.time;
-                       const timestampData = questionData.time;
+            // Iterate through the retrieved documents
+            querySnapshot.forEach((doc) => {
+                // Access the data in each document
+                const questionData = doc.data();
+                const questionText = questionData.question;
+                const questionId = doc.id;
+                const timestampData = questionData.time;
 
-                       // Convert Firestore timestamp to JavaScript Date object
-                       const timestamp = new Date(timestampData.seconds * 1000 + timestampData.nanoseconds / 1000000);
-                       
-                       // Format the date and time
-                       const dateString = timestamp.toLocaleDateString(); // Format: MM/DD/YYYY
-                       const timeString = timestamp.toLocaleTimeString(); // Format: HH:MM:SS AM/PM
-                       
-                       // Concatenate date and time strings
-                       const formattedDateTime = `${dateString} ${timeString}`;
-                       
-                       // Create HTML elements for the question
-                       const questionDiv = document.createElement("div");
-                       questionDiv.classList.add("question");
-                       questionDiv.innerHTML = `
-                           <p>Question: ${questionText}</p>
-                           <p>Time Posted: ${formattedDateTime}</p>
+                // Convert Firestore timestamp to JavaScript Date object
+                const timestamp = new Date(timestampData.seconds * 1000 + timestampData.nanoseconds / 1000000);
+
+                // Format the date and time
+                const dateString = timestamp.toLocaleDateString(); // Format: MM/DD/YYYY
+                const timeString = timestamp.toLocaleTimeString(); // Format: HH:MM:SS AM/PM
+
+                // Concatenate date and time strings
+                const formattedDateTime = `${dateString} ${timeString}`;
+
+                // Create HTML elements for the question
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                questionDiv.innerHTML = `
+                           <p>${questionText}</p>
                        `;
-                       displayAnswersForQuestion(questionId, questionDiv);
-                       container.appendChild(questionDiv);
-                   });
-               })
-               .catch((error) => {
-                   console.error("Error getting questions: ", error);
-               });
+
+                // Create "Time Posted" paragraph
+                // Time posted section creation
+                const timePostedPara = document.createElement("p");
+                timePostedPara.textContent = `Time Posted: ${formattedDateTime}`;
+                timePostedPara.classList.add("time-posted"); // Add the class for styling
+
+                const timePostedContainer = document.createElement("div");
+                timePostedContainer.classList.add("time-posted-container");
+                timePostedContainer.appendChild(timePostedPara);
+
+                questionDiv.appendChild(timePostedContainer);
+
+
+                // Create answer form
+                const answerForm = document.createElement("form");
+                answerForm.classList.add("answer-form");
+                answerForm.innerHTML = `
+    <textarea class="answer-text" placeholder="Your answer..."></textarea>
+    <button type="submit">Submit</button>
+`;
+
+                answerForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    const answerText = answerForm.querySelector(".answer-text").value;
+                    saveAnswer(questionId, answerText);
+                    answerForm.reset();
+                });
+
+                displayAnswersForQuestion(questionId, questionDiv);
+                questionDiv.appendChild(answerForm);
+                container.appendChild(questionDiv);
+            });
+        })
+        .catch((error) => {
+            console.error("Error getting questions: ", error);
+        });
 }
 
 function displayAnswersForQuestion(questionId, questionDiv) {
@@ -97,10 +124,15 @@ function displayAnswersForQuestion(questionId, questionDiv) {
 
                 // Create HTML element for the answer
                 const answerPara = document.createElement("p");
-                answerPara.textContent = `Answer: ${answerText}`;
+                answerPara.textContent = `${answerText}`;
+                answerPara.classList.add("answer"); // Add the "answer" class
 
                 // Append the answer to the question div
-                questionDiv.appendChild(answerPara);
+                const answerContainer = document.createElement("div");
+                answerContainer.classList.add("answer-container");
+                answerContainer.appendChild(answerPara);
+
+                questionDiv.appendChild(answerContainer);
             });
         })
         .catch((error) => {
