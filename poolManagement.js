@@ -179,3 +179,23 @@ document.addEventListener("DOMContentLoaded", function(){
         window.location.href = "index.html";
     });
 });
+
+function saveAnswer(questionId, answerText) {
+    // Get a reference to the "questions" collection
+    const questionsRef = db.collection("answers");
+
+    // Add a new document to the "questions" collection with the provided data
+    questionsRef.add({
+        questionId: questionId,
+        answerText: answerText,
+        // Automatically use server timestamp as the time field
+        Atime: firebase.firestore.FieldValue.serverTimestamp()
+    })
+        .then((docRef) => {
+            console.log("Answer added with ID: ", docRef.id);
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.error("Error adding answer: ", error);
+        });
+}
